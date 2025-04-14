@@ -13,5 +13,4 @@ set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTOR
 add_compile_options(-Wall -Wextra -ansi -pedantic -Wunused)
 
 # files to compile
-set(SOURCE_FILES  assignment.c  )
-add_executable(driver_c SOURCE_FILES)
+add_executable(driver_c disjoint_sets.cpp driver.cpp)
