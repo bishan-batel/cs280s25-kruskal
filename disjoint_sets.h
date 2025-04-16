@@ -16,6 +16,7 @@ Rationale:
 #define DISJOINT_SETS_H
 #include <cstdlib>
 #include <fstream> //ostream, istream
+#include <memory>
 
 // add Head and Node
 
@@ -23,16 +24,16 @@ class Node final {
 public:
   Node(size_t value);
 
-  Node *get_next() const;
+  std::shared_ptr<Node> get_next();
 
-  void set_next(Node *new_next);
+  void set_next(std::shared_ptr<Node> new_next);
 
   size_t get_value() const;
 
   friend std::ostream &operator<<(std::ostream &os, Node const &node);
 
 private:
-  Node *next;
+  std::shared_ptr<Node> next;
   size_t value;
 };
 
@@ -46,26 +47,26 @@ public:
 
   void reset();
 
-  Node *get_first() const;
+  std::shared_ptr<Node> get_first() const;
 
-  Node *get_last() const;
+  std::shared_ptr<Node> get_last() const;
 
   void init(size_t value);
 
-  void join(Head *pHead2);
+  void join(Head &head2);
 
   friend std::ostream &operator<<(std::ostream &os, Head const &head);
 
 private:
-  size_t counter{0};
-  Node *first{nullptr};
-  Node *last{nullptr};
+  size_t length{0};
+  std::shared_ptr<Node> first{nullptr};
+  std::shared_ptr<Node> last{nullptr};
 };
 
 ////////////////////////////////////////////////////////////
 class DisjointSets { // you MAY modify this
 public:
-  DisjointSets(size_t const &capacity);
+  DisjointSets(size_t capacity);
 
   DisjointSets(DisjointSets const &) = delete;
 
@@ -75,23 +76,21 @@ public:
 
   DisjointSets &operator=(DisjointSets &&) = delete;
 
-  ~DisjointSets();
-
   void Make();
 
-  void Join(size_t const &id1, size_t const &id2);
+  void Join(size_t id1, size_t id2);
 
-  size_t GetRepresentative(size_t const &id) const;
+  size_t GetRepresentative(size_t id) const;
 
-  size_t operator[](size_t const &id) const;
+  size_t operator[](size_t id) const;
 
   friend std::ostream &operator<<(std::ostream &os, DisjointSets const &ds);
 
 private:
   size_t size{0}; // current size
   size_t capacity{0}; // capacity - NOT growing, provided as ctor arg
-  size_t *representatives{nullptr}; // look-up table ID -> representative's ID
-  Head *heads{nullptr}; // lists' heads
+  std::unique_ptr<size_t[]> representatives{nullptr}; // look-up table ID -> representative's ID
+  std::unique_ptr<Head[]> heads{nullptr}; // lists' heads
 };
 
 #endif
