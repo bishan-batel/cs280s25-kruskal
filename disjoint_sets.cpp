@@ -62,8 +62,9 @@ void DisjointSets::Make() {
 void DisjointSets::Join(const size_t id1, const size_t id2) {
   Head &head1 = heads[GetRepresentative(id1)];
   Head &head2 = heads[GetRepresentative(id2)];
-  head1.join(head2);
-  representatives[id2] = 
+  head2.join(head1);
+  representatives[id1] = GetRepresentative(id2);
+  representatives[id2] = GetRepresentative(id1);
 }
 
 size_t DisjointSets::GetRepresentative(const size_t id) const { return representatives[id]; }
