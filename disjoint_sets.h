@@ -15,89 +15,205 @@ Rationale:
 #ifndef DISJOINT_SETS_H
 #define DISJOINT_SETS_H
 #include <cstdlib>
-#include <fstream> //ostream, istream
+#include <iostream>
 #include <memory>
 
 // add Head and Node
 
+/**
+ * @class Node
+ * @brief Node for use in disjointed set
+ *
+ */
 class Node final {
 public:
 
+  /**
+   * @brief Constructor
+   *
+   * @param value Repr ID
+   */
   Node(size_t value);
 
-  std::shared_ptr<Node> get_next();
+  /**
+   * @brief Gets next node in list
+   */
+  [[nodiscard]] Node* get_next();
 
-  void set_next(std::shared_ptr<Node> new_next);
+  /**
+   * @brief Sets next node in list
+   */
+  void set_next(Node* new_next);
 
-  size_t get_value() const;
+  /**
+   * @brief Gets inner value / repr
+   */
+  [[nodiscard]] size_t get_value() const;
 
+  /**
+   * @brief Prints to output stream
+   */
   friend std::ostream& operator<<(std::ostream& os, const Node& node);
 
 private:
 
-  std::shared_ptr<Node> next;
+  /**
+   * @brief Next pointer
+   */
+  Node* next;
+
+  /**
+   * @brief Value
+   */
   size_t value;
 };
 
+/**
+ * @class Head
+ * @brief Head list for a linked list of representatives
+ *
+ */
 class Head final {
 public:
 
+  /**
+   * @brief Default constructor
+   */
   Head();
 
+  /**
+   * @brief Destructor
+   */
   ~Head();
 
-  size_t size() const;
+  /**
+   * @brief Deleted move cosntructor
+   */
+  Head(Head&&) = delete;
 
-  void reset();
+  /**
+   * @brief Deleted copy constructor
+   */
+  Head(const Head&) = delete;
 
-  std::shared_ptr<Node> get_first() const;
+  /**
+   * @brief Deleted move assignment
+   */
+  auto operator=(Head&&) -> Head& = delete;
 
-  std::shared_ptr<Node> get_last() const;
+  /**
+   * @brief Deleted copy assignment
+   */
+  auto operator=(const Head&) -> Head& = delete;
 
-  void init(size_t value);
+  /**
+   * @brief Gets the amount of nodes in this list
+   */
+  [[nodiscard]] auto size() const -> size_t;
 
-  void join(Head& head2);
+  /**
+   * @brief Gets first node in list
+   */
+  [[nodiscard]] auto get_first() const -> Node*;
 
-  friend std::ostream& operator<<(std::ostream& os, const Head& head);
+  /**
+   * @brief Gest last node in list
+   */
+  [[nodiscard]] auto get_last() const -> Node*;
+
+  /**
+   * @brief Initialises list to have 1 node with represenative 'value'
+   */
+  auto init(size_t value) -> void;
+
+  /**
+   * @brief Gives head to self
+   */
+  auto join(Head& head2) -> void;
+
+  /**
+   * @brief Prints to character ostream
+   */
+  friend auto operator<<(std::ostream& os, const Head& head) -> std::ostream&;
 
 private:
 
   size_t length{0};
-  std::shared_ptr<Node> first{nullptr};
-  std::shared_ptr<Node> last{};
+  Node* first{nullptr};
+  Node* last{nullptr};
 };
 
-////////////////////////////////////////////////////////////
-class DisjointSets { // you MAY modify this
+/**
+ * @class DisjointSets
+ * @brief Disjoint sets class helper for unions
+ */
+class DisjointSets {
 public:
 
+  /**
+   * @brief Constructor to create a disjoint list with a fixed inner capacity
+   */
   DisjointSets(size_t capacity);
 
+  /**
+   * @brief Deleted copy constructor
+   */
   DisjointSets(const DisjointSets&) = delete;
 
+  /**
+   * @brief Deleted copy assignment
+   */
   DisjointSets& operator=(const DisjointSets&) = delete;
 
+  /**
+   * @brief Deleted move constructor
+   */
   DisjointSets(DisjointSets&&) = delete;
 
+  /**
+   * @brief Deleted move assignment
+   */
   DisjointSets& operator=(DisjointSets&&) = delete;
 
-  void Make();
+  /**
+   * @brief Creates a new representative with ID of the current size
+   */
+  auto Make() -> void;
 
-  void Join(size_t id1, size_t id2);
+  /**
+   * @brief Joins the two represntatives together
+   */
+  auto Join(size_t id1, size_t id2) -> void;
 
-  size_t GetRepresentative(size_t id) const;
+  /**
+   * @brief Gets representative index from the given id
+   */
+  [[nodiscard]] auto GetRepresentative(size_t id) const -> size_t;
 
-  size_t operator[](size_t id) const;
+  /**
+   * @brief Raw index into the representative array
+   */
+  [[nodiscard]] auto operator[](size_t id) const -> size_t;
 
-  friend std::ostream& operator<<(std::ostream& os, const DisjointSets& ds);
+  /**
+   * @brief Prints self to character ostream
+   */
+  friend auto operator<<(std::ostream& os, const DisjointSets& ds)
+    -> std::ostream&;
 
 private:
 
-  size_t size{0};     // current size
-  size_t capacity{0}; // capacity - NOT growing, provided as ctor arg
-  std::unique_ptr<size_t[]> representatives{nullptr
-  }; // look-up table ID -> representative's ID
-  std::unique_ptr<Head[]> heads{nullptr}; // lists' heads
+  // current size
+  size_t size{0};
+
+  // capacity - NOT growing, provided as ctor arg
+  size_t capacity{0};
+
+  // look-up table ID -> representative's ID
+  std::unique_ptr<size_t[]> representatives{nullptr};
+
+  // lists' heads
+  std::unique_ptr<Head[]> heads{nullptr};
 };
 
 #endif

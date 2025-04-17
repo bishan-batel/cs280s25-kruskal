@@ -5,60 +5,57 @@
 // class Node implementation
 Node::Node(size_t value): next{nullptr}, value(value) {}
 
-std::shared_ptr<Node> Node::get_next() { return next; }
+Node* Node::get_next() { return next; }
 
-void Node::set_next(std::shared_ptr<Node> new_next) {
-  next = std::move(new_next);
-}
+auto Node::set_next(Node* new_next) -> void { next = std::move(new_next); }
 
-size_t Node::get_value() const { return value; }
+auto Node::get_value() const -> size_t { return value; }
 
-std::ostream& operator<<(std::ostream& os, const Node& node) {
+auto operator<<(std::ostream& os, const Node& node) -> std::ostream& {
   os << "(" << node.value << " ) -> ";
   return os;
 }
 
-// class Head implementation
 Head::Head() = default;
 
-Head::~Head() { /* .... */ }
-
-size_t Head::size() const { return length; }
-
-void Head::reset() {
-  length = 0;
-  last.reset();
-  first = nullptr;
+Head::~Head() {
+  while (first) {
+    Node* temp{first->get_next()};
+    delete first;
+    first = temp;
+  }
 }
 
-std::shared_ptr<Node> Head::get_first() const { return first; }
+auto Head::size() const -> size_t { return length; }
 
-std::shared_ptr<Node> Head::get_last() const { return last; }
+auto Head::get_first() const -> Node* { return first; }
 
-void Head::init(size_t value) {
-  first = std::make_shared<Node>(value);
+auto Head::get_last() const -> Node* { return last; }
+
+auto Head::init(size_t value) -> void {
+  first = new Node{value};
   last = first;
   length = 1;
 }
 
-void Head::join(Head& head2) {
+auto Head::join(Head& head2) -> void {
   if (head2.length == 0) {
     return;
   }
 
   if (length == 0) {
-    first = std::move(head2.first);
-    last = std::move(head2.last);
+    first = std::exchange(head2.first, nullptr);
+    last = std::exchange(head2.last, nullptr);
     length = std::exchange(head2.length, 0);
     return;
   }
 
-  last->set_next(std::move(head2.first));
-  last = std::move(head2.last);
+  last->set_next(std::exchange(head2.first, nullptr));
+  last = std::exchange(head2.last, nullptr);
   length += std::exchange(head2.length, 0);
 }
 
-std::ostream& operator<<(std::ostream& os, const Head& head) {
+auto operator<<(std::ostream& os, const Head& head) -> std::ostream& {
   os << "[" << head.length << " ] -> ";
   return os;
 }
@@ -70,7 +67,7 @@ DisjointSets::DisjointSets(const size_t capacity):
     representatives{new size_t[capacity]},
     heads{new Head[capacity]} {}
 
-void DisjointSets::Make() {
+auto DisjointSets::Make() -> void {
   if (size == capacity) {
     throw "DisjointSets::Make(...) out of space";
   }
@@ -79,7 +76,7 @@ void DisjointSets::Make() {
   ++size;
 }
 
-void DisjointSets::Join(const size_t id1, const size_t id2) {
+auto DisjointSets::Join(const size_t id1, const size_t id2) -> void {
   size_t rep1 = GetRepresentative(id1);
   size_t rep2 = GetRepresentative(id2);
 
@@ -91,38 +88,37 @@ void DisjointSets::Join(const size_t id1, const size_t id2) {
     std::swap(rep1, rep2);
   }
 
-  std::shared_ptr<Node> current = heads[rep2].get_last();
+  Node* current = heads[rep2].get_last();
 
   heads[rep2].join(heads[rep1]);
 
-  // ppdate the representative of all nodes in rep1's set -> rep2
-  // std::shared_ptr<Node> current = heads[rep2].get_first();
+  // update representative refs
   while (current) {
     representatives[current->get_value()] = rep2;
     current = current->get_next();
   }
 }
 
-size_t DisjointSets::GetRepresentative(const size_t id) const {
+auto DisjointSets::GetRepresentative(const size_t id) const -> size_t {
   if (representatives[id] != id) {
     representatives[id] = GetRepresentative(representatives[id]);
   }
   return representatives[id];
 }
 
-size_t DisjointSets::operator[](const size_t id) const {
+auto DisjointSets::operator[](const size_t id) const -> size_t {
   return representatives[id];
 }
 
-std::ostream& operator<<(std::ostream& os, const DisjointSets& ds) {
+auto operator<<(std::ostream& os, const DisjointSets& ds) -> std::ostream& {
   for (size_t i = 0; i < ds.size; ++i) {
     os << i << ":  ";
     Head* p_head = &ds.heads[i];
     os << *p_head;
-    Node* p_node = p_head->get_first().get();
+    Node* p_node = p_head->get_first();
     while (p_node) {
       os << *p_node;
-      p_node = p_node->get_next().get();
+      p_node = p_node->get_next();
     }
     os << "NULL (representative " << ds.representatives[i] << ")\n";
   }

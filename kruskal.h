@@ -4,8 +4,11 @@
 #include "disjoint_sets.h"
 #include "graph.h"
 
+/**
+ * @brief Performs kruskal algorithm on given graph for MST
+ */
 template<typename Vertex, typename Edge>
-std::vector<Edge> kruskal(const Graph<Vertex, Edge>& graph) {
+auto kruskal(const Graph<Vertex, Edge>& graph) -> std::vector<Edge> {
   std::vector<Edge> mst{};
 
   std::vector<Edge> edges{graph.GetEdges().begin(), graph.GetEdges().end()};
