@@ -10,6 +10,7 @@
 template<typename Vertex, typename Edge>
 auto kruskal(const Graph<Vertex, Edge>& graph) -> std::vector<Edge> {
   std::vector<Edge> mst{};
+  mst.reserve(graph.Size() - 1);
 
   std::vector<Edge> edges{graph.GetEdges().begin(), graph.GetEdges().end()};
 

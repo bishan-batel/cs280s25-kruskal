@@ -19,10 +19,8 @@ auto operator<<(std::ostream& os, const Node& node) -> std::ostream& {
 Head::Head() = default;
 
 Head::~Head() {
-  while (first) {
-    Node* temp{first->get_next()};
-    delete first;
-    first = temp;
+  for (size_t i = 0; i < length; ++i) {
+    delete std::exchange(first, first->get_next());
   }
 }
 
@@ -39,20 +37,15 @@ auto Head::init(size_t value) -> void {
 }
 
 auto Head::join(Head& head2) -> void {
-  if (head2.length == 0) {
-    return;
-  }
+  length += std::exchange(head2.length, 0);
 
   if (length == 0) {
     first = std::exchange(head2.first, nullptr);
-    last = std::exchange(head2.last, nullptr);
-    length = std::exchange(head2.length, 0);
-    return;
+  } else {
+    last->set_next(std::exchange(head2.first, nullptr));
   }
 
-  last->set_next(std::exchange(head2.first, nullptr));
   last = std::exchange(head2.last, nullptr);
-  length += std::exchange(head2.length, 0);
 }
 
 auto operator<<(std::ostream& os, const Head& head) -> std::ostream& {
@@ -68,9 +61,9 @@ DisjointSets::DisjointSets(const size_t capacity):
     heads{new Head[capacity]} {}
 
 auto DisjointSets::Make() -> void {
-  if (size == capacity) {
-    throw "DisjointSets::Make(...) out of space";
-  }
+  // if (size == capacity) {
+  //   throw "DisjointSets::Make(...) out of space";
+  // }
   heads[size].init(size);
   representatives[size] = size;
   ++size;
@@ -89,14 +82,18 @@ auto DisjointSets::Join(const size_t id1, const size_t id2) -> void {
   }
 
   Node* current = heads[rep2].get_last();
-
   heads[rep2].join(heads[rep1]);
+
+  current = current->get_next();
 
   // update representative refs
   while (current) {
     representatives[current->get_value()] = rep2;
     current = current->get_next();
   }
+
+  std::ignore = GetRepresentative(id1);
+  std::ignore = GetRepresentative(id2);
 }
 
 auto DisjointSets::GetRepresentative(const size_t id) const -> size_t {
