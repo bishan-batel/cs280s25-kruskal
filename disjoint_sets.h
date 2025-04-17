@@ -22,6 +22,7 @@ Rationale:
 
 class Node final {
 public:
+
   Node(size_t value);
 
   std::shared_ptr<Node> get_next();
@@ -30,15 +31,17 @@ public:
 
   size_t get_value() const;
 
-  friend std::ostream &operator<<(std::ostream &os, Node const &node);
+  friend std::ostream& operator<<(std::ostream& os, const Node& node);
 
 private:
+
   std::shared_ptr<Node> next;
   size_t value;
 };
 
 class Head final {
 public:
+
   Head();
 
   ~Head();
@@ -53,11 +56,12 @@ public:
 
   void init(size_t value);
 
-  void join(Head &head2);
+  void join(Head& head2);
 
-  friend std::ostream &operator<<(std::ostream &os, Head const &head);
+  friend std::ostream& operator<<(std::ostream& os, const Head& head);
 
 private:
+
   size_t length{0};
   std::shared_ptr<Node> first{nullptr};
   std::shared_ptr<Node> last{nullptr};
@@ -66,15 +70,16 @@ private:
 ////////////////////////////////////////////////////////////
 class DisjointSets { // you MAY modify this
 public:
+
   DisjointSets(size_t capacity);
 
-  DisjointSets(DisjointSets const &) = delete;
+  DisjointSets(const DisjointSets&) = delete;
 
-  DisjointSets &operator=(DisjointSets const &) = delete;
+  DisjointSets& operator=(const DisjointSets&) = delete;
 
-  DisjointSets(DisjointSets &&) = delete;
+  DisjointSets(DisjointSets&&) = delete;
 
-  DisjointSets &operator=(DisjointSets &&) = delete;
+  DisjointSets& operator=(DisjointSets&&) = delete;
 
   void Make();
 
@@ -84,12 +89,14 @@ public:
 
   size_t operator[](size_t id) const;
 
-  friend std::ostream &operator<<(std::ostream &os, DisjointSets const &ds);
+  friend std::ostream& operator<<(std::ostream& os, const DisjointSets& ds);
 
 private:
-  size_t size{0}; // current size
+
+  size_t size{0};     // current size
   size_t capacity{0}; // capacity - NOT growing, provided as ctor arg
-  std::unique_ptr<size_t[]> representatives{nullptr}; // look-up table ID -> representative's ID
+  std::unique_ptr<size_t[]> representatives{nullptr
+  };                  // look-up table ID -> representative's ID
   std::unique_ptr<Head[]> heads{nullptr}; // lists' heads
 };
 

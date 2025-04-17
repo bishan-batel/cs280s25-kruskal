@@ -5,20 +5,28 @@
 
 class Edge {
 public:
-  Edge(size_t id1 = 0, size_t id2 = 0, float weight = 0) : id1(id1), id2(id2), weight(weight) {}
+
+  Edge(size_t id1 = 0, size_t id2 = 0, float weight = 0):
+      id1(id1), id2(id2), weight(weight) {}
+
   size_t ID1() const { return id1; }
+
   size_t ID2() const { return id2; }
+
   float Weight() const { return weight; }
-  bool operator<(Edge const &rhs) const {
-    return weight < rhs.weight || (weight == rhs.weight && id1 < rhs.id1) ||
-           (weight == rhs.weight && id1 == rhs.id1 && id2 < rhs.id2);
+
+  bool operator<(const Edge& rhs) const {
+    return weight < rhs.weight || (weight == rhs.weight && id1 < rhs.id1)
+        || (weight == rhs.weight && id1 == rhs.id1 && id2 < rhs.id2);
   }
-  friend std::ostream &operator<<(std::ostream &os, Edge const &e) {
+
+  friend std::ostream& operator<<(std::ostream& os, const Edge& e) {
     os << "(" << e.id1 << " -> " << e.id2 << ")";
     return os;
   }
 
 private:
+
   size_t id1;
   size_t id2;
   float weight;
@@ -26,51 +34,70 @@ private:
 
 class Vertex {
 public:
-  Vertex(size_t _id = 0) : id(_id) {}
+
+  Vertex(size_t _id = 0): id(_id) {}
+
   size_t ID() const { return id; }
-  bool operator<(Vertex const &rhs) const { return id < rhs.id; }
-  friend std::ostream &operator<<(std::ostream &os, Vertex const &v) {
+
+  bool operator<(const Vertex& rhs) const { return id < rhs.id; }
+
+  friend std::ostream& operator<<(std::ostream& os, const Vertex& v) {
     os << "Vertex(" << v.id << " )";
     return os;
   }
 
 private:
+
   size_t id;
 };
 
 // disjoint subsets tests 0,...,10
 void test0() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test1() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   ds.Join(1, 0);
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test2() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   ds.Join(0, 1);
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test3() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   ds.Join(0, 1);
   ds.Join(0, 2);
@@ -78,12 +105,16 @@ void test3() {
   ds.Join(0, 4);
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test4() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   ds.Join(1, 0);
   ds.Join(2, 0);
@@ -91,12 +122,16 @@ void test4() {
   ds.Join(4, 0);
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test5() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   ds.Join(1, 0);
   ds.Join(0, 2);
@@ -104,32 +139,48 @@ void test5() {
   ds.Join(0, 4);
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test6() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
-  for (int i = 1; i < 10; ++i) ds.Join(0, i);
+  for (int i = 1; i < 10; ++i) {
+    ds.Join(0, i);
+  }
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test7() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
-  for (int i = 1; i < 10; ++i) ds.Join(i, 0);
+  for (int i = 1; i < 10; ++i) {
+    ds.Join(i, 0);
+  }
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test8() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   for (int i = 1; i < 10; i += 2) {
     ds.Join(i, 0);
@@ -137,12 +188,16 @@ void test8() {
   }
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test9() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   for (int i = 1; i < 10; i += 2) {
     ds.Join(i, 0);
@@ -150,12 +205,16 @@ void test9() {
   }
   std::cout << ds << std::endl;
 
-  for (int i = 0; i < 10; ++i) std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << " -> " << ds.GetRepresentative(i) << std::endl;
+  }
 }
 
 void test10() {
   DisjointSets ds(10);
-  for (int i = 0; i < 10; ++i) ds.Make();
+  for (int i = 0; i < 10; ++i) {
+    ds.Make();
+  }
 
   // test self-join
   ds.Join(0, 1);
@@ -169,9 +228,12 @@ void test10() {
 
 // read from file
 #include <fstream>
-void solve_from_file(char const *filename) {
+
+void solve_from_file(const char* filename) {
   std::ifstream in(filename); // closed automatically
-  if (in.fail()) throw "Cannot open input file";
+  if (in.fail()) {
+    throw "Cannot open input file";
+  }
 
   // read problem
   int V, M;
@@ -195,7 +257,8 @@ void solve_from_file(char const *filename) {
 
   std::sort(mst.begin(), mst.end());
 
-  std::vector<Edge>::const_iterator it_edges = mst.begin(), it_edges_end = mst.end();
+  std::vector<Edge>::const_iterator it_edges = mst.begin(),
+                                    it_edges_end = mst.end();
   float length = 0.0f;
 
   for (; it_edges != it_edges_end; ++it_edges) {
@@ -206,16 +269,22 @@ void solve_from_file(char const *filename) {
 }
 
 void test11() { solve_from_file("g5"); }
+
 void test12() { solve_from_file("g5_2"); }
+
 void test13() { solve_from_file("g5_3"); }
+
 void test14() { solve_from_file("g10"); }
+
 void test15() { solve_from_file("g500"); }
+
 void test16() { solve_from_file("g1000"); }
 
 #include <algorithm> // shuffle
-#include <numeric> // iota
-#include <random> // RNG
-void random_graph(unsigned int N, Graph<Vertex, Edge> &g, unsigned int K) {
+#include <numeric>   // iota
+#include <random>    // RNG
+
+void random_graph(unsigned int N, Graph<Vertex, Edge>& g, unsigned int K) {
   for (unsigned int i = 0; i < N; ++i) {
     g.InsertVertex(Vertex(i));
   }
@@ -236,7 +305,11 @@ void random_graph(unsigned int N, Graph<Vertex, Edge> &g, unsigned int K) {
     // add random heavier edges
     std::vector<int> first2K(N);
     std::iota(first2K.begin(), first2K.end(), 0); // 0..N-1
-    std::shuffle(first2K.begin(), first2K.end(), std::mt19937{std::random_device{}()});
+    std::shuffle(
+      first2K.begin(),
+      first2K.end(),
+      std::mt19937{std::random_device{}()}
+    );
 
     // shrink array to first2K to 2K elements
     first2K.resize(2 * K);
@@ -256,7 +329,8 @@ void test17() {
 
   std::sort(mst.begin(), mst.end());
 
-  std::vector<Edge>::const_iterator it_edges = mst.begin(), it_edges_end = mst.end();
+  std::vector<Edge>::const_iterator it_edges = mst.begin(),
+                                    it_edges_end = mst.end();
   float length = 0.0f;
 
   for (; it_edges != it_edges_end; ++it_edges) {
@@ -267,29 +341,30 @@ void test17() {
 }
 
 void (*pTests[])(void) = {
-    test0,
-    test1,
-    test2,
-    test3,
-    test4,
-    test5,
-    test6,
-    test7,
-    test8,
-    test9,
-    test10,
-    test11,
-    test12,
-    test13,
-    test14,
-    test15,
-    test16,
-    test17};
+  test0,
+  test1,
+  test2,
+  test3,
+  test4,
+  test5,
+  test6,
+  test7,
+  test8,
+  test9,
+  test10,
+  test11,
+  test12,
+  test13,
+  test14,
+  test15,
+  test16,
+  test17
+};
 
-int main(int argc, char **argv) {
-  if (argc != 2)
+int main(int argc, char** argv) {
+  if (argc != 2) {
     return 1;
-  else {
+  } else {
     int test = 0;
     std::sscanf(argv[1], "%i", &test);
     pTests[test]();
