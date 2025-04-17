@@ -64,7 +64,7 @@ private:
 
   size_t length{0};
   std::shared_ptr<Node> first{nullptr};
-  std::shared_ptr<Node> last{nullptr};
+  std::shared_ptr<Node> last{};
 };
 
 ////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ private:
   size_t size{0};     // current size
   size_t capacity{0}; // capacity - NOT growing, provided as ctor arg
   std::unique_ptr<size_t[]> representatives{nullptr
-  };                  // look-up table ID -> representative's ID
+  }; // look-up table ID -> representative's ID
   std::unique_ptr<Head[]> heads{nullptr}; // lists' heads
 };
 

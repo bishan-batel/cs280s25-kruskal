@@ -27,7 +27,7 @@ size_t Head::size() const { return length; }
 
 void Head::reset() {
   length = 0;
-  last = nullptr;
+  last.reset();
   first = nullptr;
 }
 
@@ -47,14 +47,14 @@ void Head::join(Head& head2) {
   }
 
   if (length == 0) {
-    first = std::exchange(head2.first, nullptr);
-    last = std::exchange(head2.last, nullptr);
+    first = std::move(head2.first);
+    last = std::move(head2.last);
     length = std::exchange(head2.length, 0);
     return;
   }
 
-  last->set_next(std::exchange(head2.first, nullptr));
-  last = std::exchange(head2.last, nullptr);
+  last->set_next(std::move(head2.first));
+  last = std::move(head2.last);
   length += std::exchange(head2.length, 0);
 }
 
@@ -91,12 +91,14 @@ void DisjointSets::Join(const size_t id1, const size_t id2) {
     std::swap(rep1, rep2);
   }
 
-  heads[rep2].join(heads[GetRepresentative(rep1)]);
+  std::shared_ptr<Node> current = heads[rep2].get_last();
+
+  heads[rep2].join(heads[rep1]);
 
   // ppdate the representative of all nodes in rep1's set -> rep2
-  std::shared_ptr<Node> current = heads[rep2].get_first();
+  // std::shared_ptr<Node> current = heads[rep2].get_first();
   while (current) {
-    representatives[GetRepresentative(current->get_value())] = rep2;
+    representatives[current->get_value()] = rep2;
     current = current->get_next();
   }
 }
