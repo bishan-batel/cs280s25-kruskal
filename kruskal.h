@@ -9,8 +9,10 @@
  */
 template<typename Vertex, typename Edge>
 auto kruskal(const Graph<Vertex, Edge>& graph) -> std::vector<Edge> {
+  const size_t size = graph.Size();
+
   std::vector<Edge> mst{};
-  mst.reserve(graph.Size() - 1);
+  mst.reserve(size - 1);
 
   std::vector<Edge> edges{graph.GetEdges().begin(), graph.GetEdges().end()};
 
@@ -18,9 +20,9 @@ auto kruskal(const Graph<Vertex, Edge>& graph) -> std::vector<Edge> {
     return a.Weight() < b.Weight();
   });
 
-  DisjointSets set{graph.Size()};
+  DisjointSets set{size};
 
-  for (size_t i = 0; i < graph.Size(); i++) {
+  for (size_t i = 0; i < size; i++) {
     set.Make();
   }
 
@@ -37,7 +39,7 @@ auto kruskal(const Graph<Vertex, Edge>& graph) -> std::vector<Edge> {
       set.Join(u, v);
       mst.push_back(edge);
 
-      if (mst.size() == graph.Size() - 1) {
+      if (mst.size() == size - 1) {
         break;
       }
     }

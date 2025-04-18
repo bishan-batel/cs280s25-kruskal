@@ -57,8 +57,8 @@ auto operator<<(std::ostream& os, const Head& head) -> std::ostream& {
 DisjointSets::DisjointSets(const size_t capacity):
     size(0),
     capacity(capacity),
-    representatives{new size_t[capacity]},
-    heads{new Head[capacity]} {}
+    representatives{new size_t[capacity]{}},
+    heads{new Head[capacity]{}} {}
 
 auto DisjointSets::Make() -> void {
   // if (size == capacity) {
